@@ -5,6 +5,7 @@ Raspberry Pi - Blindy.tv
 
 # Equipment needed
 Raspberry PI
+
 Speaker
 
 # Python libraries
