@@ -58,8 +58,8 @@ def waitforbutton():
     global channels
     print ("playing ", channels[next])
     while True:
-        testVar = input("\nPress enter for next track or press q + enter to quit.")
-        if testVar =="q":
+        testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
+        if testVar == "q":
             break
         if next == (len(channels)-1):
             next = 0
