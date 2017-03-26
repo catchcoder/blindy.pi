@@ -7,6 +7,6 @@ Raspberry Pi - Blindy.tv
 Raspberry PI
 Speaker
 
-#python libraries
+# Python libraries
 
 # How to add buttons and leds t Raspberry Pi
