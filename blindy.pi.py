@@ -2,6 +2,13 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import subprocess
+from fake_useragent import UserAgent
+ua = UserAgent()
+ua.update()
+
+# use random browser
+headers = ua.random
+
 #import RPi.GPIO as GPIO
 
 btn1 =23
@@ -26,7 +33,7 @@ url = 'http://blindy.tv'
 
 def loadpage():
     global soup
-    r = requests.get(url )
+    r = requests.get(url, headers) #
     soup = BeautifulSoup(r.text, "html.parser")
 
 def getchannels():
@@ -48,6 +55,8 @@ def getallhrefs():
 
 def waitforbutton():
     global next
+    global channels
+    print ("playing ", channels[next])
     while True:
         testVar = input("\nPress enter for next track or press q + enter to quit.")
         if testVar =="q":
