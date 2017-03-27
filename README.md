@@ -10,4 +10,4 @@ Speaker
 
 # Python libraries
 
-# How to add buttons and leds t Raspberry Pi
+# How to add buttons and leds to Raspberry Pi
