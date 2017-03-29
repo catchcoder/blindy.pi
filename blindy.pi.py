@@ -18,8 +18,8 @@ next = 0
 # GPIO.setwarnings(False)
 
 # GPIO.setmode(GPIO.BCM)
-#GPIO.setup(led1, GPIO.OUT)
-#GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+# GPIO.setup(led1, GPIO.OUT)
+# GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 soup = ""
 channels = []
@@ -32,7 +32,7 @@ url = 'http://blindy.tv'
 # If payload required
 # payload = {
 #    'q': 'Python',
-#}
+# }
 
 def loadpage():
     global start_time
@@ -56,7 +56,7 @@ def getchannels():
         cells = row.findAll("td")
         if len(cells) == 3:
             channels.append((cells[2].find('a').get('href')))
-            #print (cells[1].text)
+            # print (cells[1].text)
 
 def getplaying(playing):
     loadpage()
@@ -86,7 +86,7 @@ def waitforbutton():
     global channels
     global weblink
 
-    #print ("playing ", channels[next])
+    # print ("playing ", channels[next])
     while True:
         testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
         if testVar == "q":
@@ -101,9 +101,9 @@ def waitforbutton():
         # if GPIO.input(btn1) == True:
 
 def speakwhatson(channelinfo=[]):
-    #global channelname
-    #global whatson
-    #global weblink
+    # global channelname
+    # global whatson
+    # global weblink
     speak("Channel:", channelname)
     speak("Playing:", whatson)
     play()
