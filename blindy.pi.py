@@ -25,7 +25,7 @@ soup = ""
 channels = []
 whatson = ""
 channelname =""
-
+firstrun = True
 #Url to read
 url = 'http://blindy.tv'
 
@@ -35,11 +35,15 @@ url = 'http://blindy.tv'
 #}
 
 def loadpage():
-    if int((time.time() -start_time)) <=5: 
-        print ("less than 5 secoinds")
+    global start_time
+    global firstrun
+	# add time delay to stop dos on blindy.tv website, it will update the channels array only every 1 minute
+    if (int((time.time() -start_time)) <=60 and firstrun == False): 
+        print ("less than 60 seconds")
         return
-    print ("greater than 5 seconds")
+    print ("greater than 60 seconds")
     start_time = time.time()
+    firstrun = False
     global soup
     r = requests.get(url, headers) #
     soup = BeautifulSoup(r.text, "html.parser")
