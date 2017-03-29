@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import time
 import requests
 import os
 import subprocess
@@ -9,6 +10,7 @@ ua.update()
 # use random browser
 headers = ua.random
 
+start_time = time.time()
 #import RPi.GPIO as GPIO
 
 btn1 =23
@@ -33,6 +35,11 @@ url = 'http://blindy.tv'
 #}
 
 def loadpage():
+    if int((time.time() -start_time)) <=5: 
+        print ("less than 5 secoinds")
+        return
+    print ("greater than 5 seconds")
+    start_time = time.time()
     global soup
     r = requests.get(url, headers) #
     soup = BeautifulSoup(r.text, "html.parser")
@@ -45,7 +52,7 @@ def getchannels():
         cells = row.findAll("td")
         if len(cells) == 3:
             channels.append( (cells[2].find('a').get('href') ))
-            print (cells[1].text)
+            #print (cells[1].text)
 
 def getplaying(playing):
     loadpage()
@@ -116,6 +123,10 @@ loadpage()
 
 getchannels()
 
+getplaying (channels[0])
+weblink = (channels[0])
+speakwhatson([channelname,whatson,weblink])
+ 
 waitforbutton()
 
 
