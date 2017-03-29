@@ -11,41 +11,41 @@ ua.update()
 headers = ua.random
 
 start_time = time.time()
-#import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 
-btn1 =23
+btn1 = 23
 next = 0
-#GPIO.setwarnings(False) 
+# GPIO.setwarnings(False)
 
-#GPIO.setmode(GPIO.BCM)
+# GPIO.setmode(GPIO.BCM)
 #GPIO.setup(led1, GPIO.OUT)
 #GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 soup = ""
 channels = []
 whatson = ""
-channelname =""
+channelname = ""
 firstrun = True
-#Url to read
+# Url to read
 url = 'http://blindy.tv'
 
 # If payload required
-#payload = {
+# payload = {
 #    'q': 'Python',
 #}
 
 def loadpage():
     global start_time
     global firstrun
-	# add time delay to stop dos on blindy.tv website, it will update the channels array only every 1 minute
-    if (int((time.time() -start_time)) <=60 and firstrun == False): 
+    # add time delay to stop dos on blindy.tv website, it will update the channels array only every 1 minute
+    if (int((time.time() - start_time)) <= 60 and firstrun == False):
         print ("less than 60 seconds")
         return
     print ("greater than 60 seconds")
     start_time = time.time()
     firstrun = False
     global soup
-    r = requests.get(url, headers) #
+    r = requests.get(url, headers)
     soup = BeautifulSoup(r.text, "html.parser")
 
 def getchannels():
@@ -55,7 +55,7 @@ def getchannels():
     for row in table.findAll("tr"):
         cells = row.findAll("td")
         if len(cells) == 3:
-            channels.append( (cells[2].find('a').get('href') ))
+            channels.append((cells[2].find('a').get('href')))
             #print (cells[1].text)
 
 def getplaying(playing):
@@ -68,7 +68,7 @@ def getplaying(playing):
     for row in table.findAll("tr"):
         cells = row.findAll("td")
         if len(cells) == 3:
-            if (cells[2].find('a').get('href') ) == playing:
+            if (cells[2].find('a').get('href')) == playing:
                 whatson = (cells[1].text)
                 channelname = (cells[0].text)
                 return (cells[1].text)
@@ -89,53 +89,45 @@ def waitforbutton():
     #print ("playing ", channels[next])
     while True:
         testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
-        if testVar =="q":
+        if testVar == "q":
             break
         if next == (len(channels)-1):
             next = 0
         else:
             next += 1
-        getplaying (channels[next])
+        getplaying(channels[next])
         weblink = (channels[next])
-        speakwhatson([channelname,whatson,weblink])
-        #if GPIO.input(btn1) == True:
-        
+        speakwhatson([channelname, whatson, weblink])
+        # if GPIO.input(btn1) == True:
+
 def speakwhatson(channelinfo=[]):
     #global channelname
     #global whatson
     #global weblink
-	speak ("Channel:", channelname)
-	speak ("Playing:", whatson)
-	play ()
-    
-def speak(a,b):
-   	
-	pipe = subprocess.Popen(['echo',a ,b], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	name = pipe.communicate()[0]
-    #pipe.wait(timeout=120)
-	print (name)
+    speak("Channel:", channelname)
+    speak("Playing:", whatson)
+    play()
+
+def speak(a, b):
+
+    pipe = subprocess.Popen(['echo', a, b], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    name = pipe.communicate()[0]
+    # pipe.wait(timeout=120)
+    print (name)
 
 def play():
-	pipe = subprocess.Popen(['echo',weblink], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	name = pipe.communicate()[0]
-    #pipe.wait(timeout=120)
-	print (name)
-
+    pipe = subprocess.Popen(['echo', weblink], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    name = pipe.communicate()[0]
+    # pipe.wait(timeout=120)
+    print (name)
 
 
 loadpage()
 
 getchannels()
 
-getplaying (channels[0])
+getplaying(channels[0])
 weblink = (channels[0])
-speakwhatson([channelname,whatson,weblink])
- 
+speakwhatson([channelname, whatson, weblink])
+
 waitforbutton()
-
-
-
-
-
-
-        
