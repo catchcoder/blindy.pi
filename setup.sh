@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Install packages required using pip3
 pip install RPi.GPIO
