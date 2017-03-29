@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
-# Install packages required using pip
-sudo pip install RPi.GPIO
-sudo pip install requests
-sudo pip install beautifulsoup4
-sudo pip install fake-useragent
-sudo pip install python-vlc
+# Install packages required using pip3
+pip install RPi.GPIO
+pip install requests
+pip install beautifulsoup4
+pip install fake-useragent
+pip install python-vlc
 
 

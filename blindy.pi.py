@@ -46,6 +46,20 @@ def getchannels():
             channels.append( (cells[2].find('a').get('href') ))
             print (cells[1].text)
 
+def getplaying(playing):
+    loadpage()
+    global channels
+    global soup
+    global whatson
+    table = soup.find("table")
+    for row in table.findAll("tr"):
+        cells = row.findAll("td")
+        if len(cells) == 3:
+            if (cells[2].find('a').get('href') ) == playing:
+				whatson = (cells[1].text)
+				return (cells[1].text)
+
+
 def getallhrefs():
     titles = soup.findAll('a', href=True)
     for t in titles:
@@ -56,19 +70,26 @@ def getallhrefs():
 def waitforbutton():
     global next
     global channels
-    print ("playing ", channels[next])
+    #print ("playing ", channels[next])
     while True:
-        testVar = input("\nPress enter for next track or press q + enter to quit.")
+        testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
         if testVar =="q":
             break
         if next == (len(channels)-1):
             next = 0
         else:
-            next += 1
-        print ("playing ", channels[next])
-            
+			next += 1
+			getplaying (channels[next])
+			print ("weblink ", channels[next])
+			speakwhatson()
         #if GPIO.input(btn1) == True:
         
+def speakwhatson():
+	print (whatson)
+
+	pipe = subprocess.Popen(['uptime',"| sed \'s/.*up \([^,]*\), .*/\1/\'"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        name = pipe.communicate()[0]
+        #pipe.wait(timeout=120)
 
 loadpage()
 
