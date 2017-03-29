@@ -49,12 +49,11 @@ def getchannels():
 
 def getplaying(playing):
     loadpage()
-
     global channels
     global soup
     global whatson
-	global channelname
-    
+    global channelname
+
 table = soup.find("table")
     for row in table.findAll("tr"):
         cells = row.findAll("td")
