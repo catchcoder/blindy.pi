@@ -22,6 +22,7 @@ next = 0
 soup = ""
 channels = []
 whatson = ""
+channelname =""
 
 #Url to read
 url = 'http://blindy.tv'
@@ -48,15 +49,19 @@ def getchannels():
 
 def getplaying(playing):
     loadpage()
+
     global channels
     global soup
     global whatson
-    table = soup.find("table")
+	global channelname
+    
+table = soup.find("table")
     for row in table.findAll("tr"):
         cells = row.findAll("td")
         if len(cells) == 3:
             if (cells[2].find('a').get('href') ) == playing:
 				whatson = (cells[1].text)
+				channelname = (cell[0].text)
 				return (cells[1].text)
 
 
@@ -80,16 +85,19 @@ def waitforbutton():
         else:
 			next += 1
 			getplaying (channels[next])
-			print ("weblink ", channels[next])
+			weblink= channels[next])
 			speakwhatson()
         #if GPIO.input(btn1) == True:
         
 def speakwhatson():
-	print (whatson)
+	pritn ("Channel:", chanllename)
+	print ("Playing:", whatson)
+	print ("Weblink:", weblink)
 
-	pipe = subprocess.Popen(['uptime',"| sed \'s/.*up \([^,]*\), .*/\1/\'"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        name = pipe.communicate()[0]
-        #pipe.wait(timeout=120)
+	pipe = subprocess.Popen(['espeak',""], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	name = pipe.communicate()[0]
+    #pipe.wait(timeout=120)
+	print (name)
 
 loadpage()
 
