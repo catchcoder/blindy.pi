@@ -3,9 +3,14 @@ import time
 import requests
 import os
 import subprocess
+import vlc
 from fake_useragent import UserAgent
 ua = UserAgent()
 ua.update()
+
+Instance = vlc.Instance()
+player = Instance.media_player_new()
+Media = ""
 
 # use random browser
 headers = ua.random
@@ -37,6 +42,7 @@ url = 'http://blindy.tv'
 def loadpage():
     global start_time
     global firstrun
+    global soup
     # add time delay to stop dos on blindy.tv website, it will update the channels array only every 1 minute
     if (int((time.time() - start_time)) <= 60 and firstrun == False):
         print ("less than 60 seconds")
@@ -44,7 +50,6 @@ def loadpage():
     print ("greater than 60 seconds")
     start_time = time.time()
     firstrun = False
-    global soup
     r = requests.get(url, headers)
     soup = BeautifulSoup(r.text, "html.parser")
 
@@ -60,8 +65,8 @@ def getchannels():
 
 def getplaying(playing):
     loadpage()
-    global channels
-    global soup
+    # global channels
+    # global soup
     global whatson
     global channelname
     table = soup.find("table")
@@ -90,6 +95,7 @@ def waitforbutton():
     while True:
         testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
         if testVar == "q":
+            player.stop()
             break
         if next == (len(channels)-1):
             next = 0
@@ -101,9 +107,6 @@ def waitforbutton():
         # if GPIO.input(btn1) == True:
 
 def speakwhatson(channelinfo=[]):
-    # global channelname
-    # global whatson
-    # global weblink
     speak("Channel:", channelname)
     speak("Playing:", whatson)
     play()
@@ -121,13 +124,25 @@ def play():
     # pipe.wait(timeout=120)
     print (name)
 
+def startup_play():
+    global weblink
+    getplaying(channels[0])
+    weblink = (channels[0])
+    speakwhatson([channelname, whatson, weblink])
+    vlcplay()
+
+def vlcplay():
+	global Media
+	global player
+	Media = Instance.media_new(weblink)
+	Media.get_mrl()
+	player.set_media(Media)
+	player.play()
 
 loadpage()
 
 getchannels()
 
-getplaying(channels[0])
-weblink = (channels[0])
-speakwhatson([channelname, whatson, weblink])
+startup_play()
 
 waitforbutton()
