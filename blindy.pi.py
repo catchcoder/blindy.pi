@@ -33,7 +33,7 @@ channelname = ""
 firstrun = True
 # Url to read
 url = 'http://blindy.tv'
-
+url2 = 'http://www.radiofeeds.co.uk/mp3.asp'
 # If payload required
 # payload = {
 #    'q': 'Python',
@@ -50,7 +50,7 @@ def loadpage():
     print ("greater than 60 seconds")
     start_time = time.time()
     firstrun = False
-    r = requests.get(url, headers)
+    r = requests.get(url)
     soup = BeautifulSoup(r.text, "html.parser")
 
 def getchannels():
@@ -95,7 +95,9 @@ def waitforbutton():
     while True:
         testVar = raw_input("\nPress enter for next track or press q + enter to quit.")
         if testVar == "q":
-            player.stop()
+            # subprocess.call (['mpc','stop'],shell=True)
+ 
+            # player.stop()
             break
         if next == (len(channels)-1):
             next = 0
@@ -109,17 +111,23 @@ def waitforbutton():
 def speakwhatson(channelinfo=[]):
     speak("Channel:", channelname)
     speak("Playing:", whatson)
-    play()
+    vlcplay()
 
 def speak(a, b):
 
-    pipe = subprocess.Popen(['echo', a, b], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    name = pipe.communicate()[0]
+    pipe = subprocess.call(['espeak', a], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # pipe.wait()
+    pipe = subprocess.call(['espeak', b], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #pipe.wait()
+    # name = pipe.communicate()[0]
     # pipe.wait(timeout=120)
-    print (name)
+    # print (name)
 
 def play():
-    pipe = subprocess.Popen(['echo', weblink], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.call (['mpc','stop'],shell=True)
+    subprocess.call (['mpc','clear'],shell=True)
+    subprocess.call (['mpc','add',weblink],shell=True)
+    pipe = subprocess.call(['mpc','play'],shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     name = pipe.communicate()[0]
     # pipe.wait(timeout=120)
     print (name)
