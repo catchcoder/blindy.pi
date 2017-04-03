@@ -104,7 +104,7 @@ def waitforbutton():
 
         if GPIO.input(btn3) == False:
             speak("shutting down", "blindy tv pi")
-            subprocess.call(['mpc', 'stop', '-q'])
+            subprocess.call(['sudo', 'shutdown', '-t', 'now'])
 
         if GPIO.input(btn4) == False:
             speak("volume", "up")
@@ -121,10 +121,10 @@ def waitforbutton():
             #subprocess.call(['mpc', 'stop', '-q'])
 
             # break
-            if next == (len(channels) - 1):
+            next += 1
+            if next == len(channels):
                 next = 0
-            else:
-                next += 1
+
             getplaying(channels[next])
             weblink = (channels[next])
             speakwhatson([channelname, whatson, weblink])
