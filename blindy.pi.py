@@ -16,13 +16,20 @@ import RPi.GPIO as GPIO
 
 btn1 = 23 # next channel
 btn2 = 14 # stop
+btn3 = 25 # turn off blindy pi radio
+btn4 = 12 # volume up
+btn5 = 16 # volume down
 next = 0
+
 GPIO.setwarnings(False)
 
 GPIO.setmode(GPIO.BCM)
 # GPIO.setup(led1, GPIO.OUT)
 GPIO.setup(btn1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(btn2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(btn3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(btn4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(btn5, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 soup = ""
@@ -92,10 +99,22 @@ def waitforbutton():
 
     while True:
         if GPIO.input(btn2) == False:
-            # subprocess.call(['mpc', 'stop', '-q'])
-            speak("Blindy tv", "stopping")
-
+           speak("Blindy tv", "stopping")
+           subprocess.call(['mpc', 'stop', '-q'])
  
+        if GPIO.input(btn3) == False:
+           speak("shutting down", "blindy tv pi")
+           subprocess.call(['mpc', 'stop', '-q'])
+ 
+        if GPIO.input(btn4) == False:
+           speak("volume", "up")
+           subprocess.call(['mpc', 'volume', '+1','-q'])
+ 
+        if GPIO.input(btn5) == False:
+           speak("volume", "down")
+           subprocess.call(['mpc', 'volume','-1', '-q'])
+ 
+
         if GPIO.input(btn1) == False:
             #testVar = input(
             #    "\nPress enter for next track or press q + enter to quit.")
