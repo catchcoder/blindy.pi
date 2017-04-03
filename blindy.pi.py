@@ -1,31 +1,29 @@
 from bs4 import BeautifulSoup
 import time
-# subprocess.call (['mpc','stop'],shell=True)
 import requests
 import os
 import subprocess
-import vlc
+# import vlc
 from fake_useragent import UserAgent
 ua = UserAgent()
 ua.update()
-
-Instance = vlc.Instance()
-player = Instance.media_player_new()
-Media = ""
 
 # use random browser
 headers = ua.random
 
 start_time = time.time()
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
-btn1 = 23
+btn1 = 23 # next channel
+btn2 = 14 # stop
 next = 0
-# GPIO.setwarnings(False)
+GPIO.setwarnings(False)
 
-# GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 # GPIO.setup(led1, GPIO.OUT)
-# GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(btn1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(btn2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 
 soup = ""
 channels = []
@@ -48,12 +46,10 @@ def loadpage():
     # add time delay to stop dos on blindy.tv website, it will update the
     # channels array only every 1 minute
     if (int((time.time() - start_time)) <= 60 and firstrun == False):
-        # print ("less than 60 seconds")
         return
-    # print ("greater than 60 seconds")
     start_time = time.time()
     firstrun = False
-    r = requests.get(url)
+    r = requests.get(url,headers)
     soup = BeautifulSoup(r.text, "html.parser")
 
 
@@ -65,13 +61,10 @@ def getchannels():
         cells = row.findAll("td")
         if len(cells) == 3:
             channels.append((cells[2].find('a').get('href')))
-            # print (cells[1].text)
 
 
 def getplaying(playing):
     loadpage()
-    # global channels
-    # global soup
     global whatson
     global channelname
     table = soup.find("table")
@@ -97,30 +90,30 @@ def waitforbutton():
     global channels
     global weblink
 
-    # print ("playing ", channels[next])
     while True:
-        testVar = input(
-            "\nPress enter for next track or press q + enter to quit.")
-        if testVar == "q":
-            subprocess.call(['mpc', 'stop', '-q'])
+        if GPIO.input(btn2) == False:
+            # subprocess.call(['mpc', 'stop', '-q'])
+            speak("Blindy tv", "stopping")
 
-            # player.stop()
-            break
-        if next == (len(channels) - 1):
-            next = 0
-        else:
-            next += 1
-        getplaying(channels[next])
-        weblink = (channels[next])
-        speakwhatson([channelname, whatson, weblink])
+ 
+        if GPIO.input(btn1) == False:
+            #testVar = input(
+            #    "\nPress enter for next track or press q + enter to quit.")
+            #if testVar == "q":
+            #subprocess.call(['mpc', 'stop', '-q'])
+
+            #break
+            if next == (len(channels) - 1):
+                next = 0
+            else:
+                next += 1
+            getplaying(channels[next])
+            weblink = (channels[next])
+            speakwhatson([channelname, whatson, weblink])
         # if GPIO.input(btn1) == True:
 
 
 def speakwhatson(channelinfo=[]):
-    # print ('channel name: ',channelinfo[0])
-    # print ('whats on: ', channelinfo[1])
-    # print ('weblink: ',channelinfo[2])
-
     speak("Channel:", channelname)
     speak("Playing:", whatson)
     play()
@@ -148,18 +141,7 @@ def startup_play():
     getplaying(channels[0])
     weblink = (channels[0])
     speakwhatson([channelname, whatson, weblink])
-    # play()
-
-
-def vlcplay():
-    global Media
-    global player
-    Media = Instance.media_new(weblink)
-    Media.get_mrl()
-    player.set_media(Media)
-    player.play()
-
-
+   
 loadpage()
 
 getchannels()
