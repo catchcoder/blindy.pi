@@ -14,11 +14,11 @@ headers = ua.random
 start_time = time.time()
 import RPi.GPIO as GPIO
 
-btn1 = 23 # next channel
-btn2 = 14 # stop
-btn3 = 25 # turn off blindy pi radio
-btn4 = 12 # volume up
-btn5 = 16 # volume down
+btn1 = 23  # next channel
+btn2 = 14  # stop
+btn3 = 25  # turn off blindy pi radio
+btn4 = 12  # volume up
+btn5 = 16  # volume down
 next = 0
 
 GPIO.setwarnings(False)
@@ -56,7 +56,7 @@ def loadpage():
         return
     start_time = time.time()
     firstrun = False
-    r = requests.get(url,headers)
+    r = requests.get(url, headers)
     soup = BeautifulSoup(r.text, "html.parser")
 
 
@@ -99,29 +99,28 @@ def waitforbutton():
 
     while True:
         if GPIO.input(btn2) == False:
-           speak("Blindy tv", "stopping")
-           subprocess.call(['mpc', 'stop', '-q'])
- 
+            speak("Blindy tv", "stopping")
+            subprocess.call(['mpc', 'stop', '-q'])
+
         if GPIO.input(btn3) == False:
-           speak("shutting down", "blindy tv pi")
-           subprocess.call(['mpc', 'stop', '-q'])
- 
+            speak("shutting down", "blindy tv pi")
+            subprocess.call(['mpc', 'stop', '-q'])
+
         if GPIO.input(btn4) == False:
-           speak("volume", "up")
-           subprocess.call(['mpc', 'volume', '+1','-q'])
- 
+            speak("volume", "up")
+            subprocess.call(['mpc', 'volume', '+1', '-q'])
+
         if GPIO.input(btn5) == False:
-           speak("volume", "down")
-           subprocess.call(['mpc', 'volume','-1', '-q'])
- 
+            speak("volume", "down")
+            subprocess.call(['mpc', 'volume', '-1', '-q'])
 
         if GPIO.input(btn1) == False:
-            #testVar = input(
+            # testVar = input(
             #    "\nPress enter for next track or press q + enter to quit.")
-            #if testVar == "q":
+            # if testVar == "q":
             #subprocess.call(['mpc', 'stop', '-q'])
 
-            #break
+            # break
             if next == (len(channels) - 1):
                 next = 0
             else:
@@ -160,7 +159,8 @@ def startup_play():
     getplaying(channels[0])
     weblink = (channels[0])
     speakwhatson([channelname, whatson, weblink])
-   
+
+
 loadpage()
 
 getchannels()
