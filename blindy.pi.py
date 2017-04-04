@@ -151,9 +151,11 @@ def startup_play():
     WEB_LINK = (CHANNELS[0])
     speakwhatson()
 
+
 def set_startup_volume():
     """ Set defualt volume for mpc to START_VOLUME variable """
-    subprocess.call(['mpc', '-q', 'volume', START_VOLUME ])
+    subprocess.call(['mpc', '-q', 'volume', START_VOLUME])
+
 
 if __name__ == '__main__':
     loadpage()
