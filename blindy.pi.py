@@ -85,40 +85,48 @@ def getplaying(playing):
                 return cells[1].text
 
 
+def stop_playing():
+    """ stop mpc playing stream """
+    subprocess.call(['mpc', 'stop', '-q'])
+
+
 def main():
     """ Main loop to check if and what button is pressed """
+    try:
 
-    while True:
-        if GPIO.input(BTN_2) == False:
-            speak("Blindy tv", "stopping")
-            subprocess.call(['mpc', 'stop', '-q'])
+        while True:
+            if GPIO.input(BTN_2) == False:
+                speak("Blindy tv", "stopping")
+                stop_playing()
 
-        if GPIO.input(BTN_3) == False:
-            speak("shutting down", "blindy tv pi")
-            subprocess.call(['mpc', 'stop', '-q'])
-            subprocess.call(['sudo', 'shutdown', '-t', 'now'])
+            if GPIO.input(BTN_3) == False:
+                speak("shutting down", "blindy tv pi")
+                stop_playing()
+                subprocess.call(['sudo', 'shutdown', '-t', 'now'])
 
-        if GPIO.input(BTN_4) == False:
-            speak("volume", "up")
-            subprocess.call(['mpc', '-q', 'volume', '+5'])
-            play()
+            if GPIO.input(BTN_4) == False:
+                speak("volume", "up")
+                subprocess.call(['mpc', '-q', 'volume', '+5'])
+                play()
 
-        if GPIO.input(BTN_5) == False:
-            speak("volume", "down")
-            subprocess.call(['mpc', '-q', 'volume', '-5'])
-            play()
+            if GPIO.input(BTN_5) == False:
+                speak("volume", "down")
+                subprocess.call(['mpc', '-q', 'volume', '-5'])
+                play()
 
-        if GPIO.input(BTN_1) == False:
-            global WEB_LINK
-            global NEXT_STREAM
-            NEXT_STREAM += 1
-            # check if at end of list
-            if NEXT_STREAM == len(CHANNELS):
-                NEXT_STREAM = 0
+            if GPIO.input(BTN_1) == False:
+                global WEB_LINK
+                global NEXT_STREAM
+                NEXT_STREAM += 1
+                # check if at end of list
+                if NEXT_STREAM == len(CHANNELS):
+                    NEXT_STREAM = 0
 
-            getplaying(CHANNELS[NEXT_STREAM])
-            WEB_LINK = CHANNELS[NEXT_STREAM]
-            speakwhatson()
+                getplaying(CHANNELS[NEXT_STREAM])
+                WEB_LINK = CHANNELS[NEXT_STREAM]
+                speakwhatson()
+    except KeyboardInterrupt:
+        stop_playing()
 
 
 def speakwhatson():
@@ -130,7 +138,7 @@ def speakwhatson():
 
 def speak(speak_a, speak_b):
     """ Use espeak to say what the playing or what button was pressed """
-    subprocess.call(['mpc', 'stop', '-q'])
+    stop_playing()
     subprocess.call(['espeak', speak_a, '2>/dev/null'])
     subprocess.call(['espeak', speak_b, '2>/dev/null'],
                     stderr=subprocess.STDOUT)
