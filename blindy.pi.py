@@ -40,7 +40,7 @@ WHATS_ON = ""
 CHANNEL_NAME = ""
 WEB_LINK = ""
 FIRST_RUN = True
-
+START_VOLUME = '70'
 # URL to read
 URL = 'http://blindy.tv'
 URL2 = 'http://www.radiofeeds.co.uk/mp3.asp'
@@ -95,15 +95,18 @@ def main():
 
         if GPIO.input(BTN_3) == False:
             speak("shutting down", "blindy tv pi")
+            subprocess.call(['mpc', 'stop', '-q'])
             subprocess.call(['sudo', 'shutdown', '-t', 'now'])
 
         if GPIO.input(BTN_4) == False:
             speak("volume", "up")
-            subprocess.call(['mpc', 'volume', '+1', '-q'])
+            subprocess.call(['mpc', '-q', 'volume', '+5'])
+            play()
 
         if GPIO.input(BTN_5) == False:
             speak("volume", "down")
-            subprocess.call(['mpc', 'volume', '-1', '-q'])
+            subprocess.call(['mpc', '-q', 'volume', '-5'])
+            play()
 
         if GPIO.input(BTN_1) == False:
             global WEB_LINK
@@ -148,9 +151,13 @@ def startup_play():
     WEB_LINK = (CHANNELS[0])
     speakwhatson()
 
+def set_startup_volume():
+    """ Set defualt volume for mpc to START_VOLUME variable """
+    subprocess.call(['mpc', '-q', 'volume', START_VOLUME ])
 
 if __name__ == '__main__':
     loadpage()
     getchannels()
+    set_startup_volume()
     startup_play()
     main()
