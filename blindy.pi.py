@@ -40,7 +40,7 @@ WHATS_ON = ""
 CHANNEL_NAME = ""
 WEB_LINK = ""
 FIRST_RUN = True
-START_VOLUME = '70'
+START_VOLUME = 70
 # URL to read
 URL = 'http://blindy.tv'
 URL2 = 'http://www.radiofeeds.co.uk/mp3.asp'
@@ -91,7 +91,16 @@ def stop_playing():
 
 
 def main():
-    """ Main loop to check if and what button is pressed """
+    """
+    Load page and start playing then
+    check if and what button is pressed
+    """
+    loadpage()
+    getchannels()
+    set_startup_volume()
+    startup_play()
+
+
     try:
 
         while True:
@@ -162,12 +171,8 @@ def startup_play():
 
 def set_startup_volume():
     """ Set defualt volume for mpc to START_VOLUME variable """
-    subprocess.call(['mpc', '-q', 'volume', START_VOLUME])
+    subprocess.call(['mpc', '-q', 'volume', str(START_VOLUME)])
 
 
 if __name__ == '__main__':
-    loadpage()
-    getchannels()
-    set_startup_volume()
-    startup_play()
     main()
