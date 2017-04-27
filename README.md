@@ -1,5 +1,5 @@
 # In Progress
-Inline-style: ![alt text](https://travis-ci.org/catchcoder/blindy.pi.svg?branch=master "Travis CI")
+Travis CI: ![alt text](https://travis-ci.org/catchcoder/blindy.pi.svg?branch=master "Travis CI")
 
 
 # blindy.pi
