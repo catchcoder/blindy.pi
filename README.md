@@ -1,5 +1,7 @@
 # In Progress
-Travis CI: ![alt text](https://travis-ci.org/catchcoder/blindy.pi.svg?branch=master "Travis CI")
+![alt text](https://travis-ci.org/catchcoder/blindy.pi.svg?branch=master "Travis CI")
+[![Requirements Status](https://requires.io/github/catchcoder/blindy.pi/requirements.svg?branch=master)](https://requires.io/github/catchcoder/blindy.pi/requirements/?branch=master)
+
 
 
 # blindy.pi
