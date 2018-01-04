@@ -4,6 +4,10 @@ python:
 # - "3.6"
 # command to install dependencies
 
+before_install:
+  - sudo apt-get -qq update -y
+  - sudo apt-get install -y mpc mpd
+
 install: "pip install -r requirements_ci.txt"
 # command to run tests
 script: python blindy.pi.py
