@@ -9,8 +9,14 @@ Parts needed:
 import time
 import subprocess
 import requests
-import RPi.GPIO as GPIO
 from bs4 import BeautifulSoup
+try:
+    # Try and import GPIO for Raspberry Pi.
+    # If it fails import fake GPIO for CI.
+    import RPi.GPIO as GPIO
+except ImportError:
+    # Import fake as GPIO https://pypi.python.org/pypi/fakeRPiGPIO/0.2a0.
+    from RPi import GPIO
 
 START_TIME = time.time()
 
@@ -42,7 +48,7 @@ URL2 = 'http://www.radiofeeds.co.uk/mp3.asp'
 
 
 def loadpage():
-    """ Get web page and parse with beatifulsoup
+    """ Get web page and parse with beatifulsoup.
     """
     global START_TIME
     global FIRST_RUN
@@ -58,7 +64,7 @@ def loadpage():
 
 
 def getchannels():
-    """" Search web page and load hrefs into channels array
+    """" Search web page and load hrefs into channels array.
     """
     table = SOUP.find("table")
     for row in table.findAll("tr"):
@@ -68,7 +74,7 @@ def getchannels():
 
 
 def getplaying(playing):
-    """ Find whats playing online now
+    """ Find whats playing online now.
     """
     loadpage()
     global WHATS_ON
@@ -84,14 +90,14 @@ def getplaying(playing):
 
 
 def stop_playing():
-    """ stop mpc playing stream
+    """ stop mpc playing stream.
     """
     subprocess.call(['mpc', 'stop', '-q'])
 
 
 def main():
     """ Load page and start playing then
-    check if and what button is pressed
+    check if and what button is pressed.
     """
     loadpage()
     getchannels()
@@ -137,7 +143,7 @@ def main():
 
 
 def speakwhatson():
-    """ Speak using whats on and play stream
+    """ Speak using whats on and play stream.
     """
     speak("Channel", CHANNEL_NAME)
     speak("Playing", WHATS_ON)
@@ -146,7 +152,7 @@ def speakwhatson():
 
 def speak(speak_a, speak_b):
     """ Use espeak to say what the playing or
-    what button was pressed
+    what button was pressed.
     """
     stop_playing()
     subprocess.call(['espeak', speak_a, '2>/dev/null'])
@@ -154,7 +160,7 @@ def speak(speak_a, speak_b):
 
 
 def play():
-    """  Using MPC load new stream and play it
+    """  Using MPC load new stream and play it.
     """
     subprocess.call(['mpc', 'clear', '-q'])
     subprocess.call(['mpc', 'load', WEB_LINK])
@@ -163,7 +169,7 @@ def play():
 
 
 def startup_play():
-    """ Start playing stream on startup
+    """ Start playing stream on startup.
     """
     global WEB_LINK
     getplaying(CHANNELS[0])
@@ -172,7 +178,7 @@ def startup_play():
 
 
 def set_startup_volume():
-    """ Set defualt volume for mpc to START_VOLUME variable
+    """ Set defualt volume for mpc to START_VOLUME variable.
     """
     subprocess.call(['mpc', '-q', 'volume', str(START_VOLUME)])
 
