@@ -6,7 +6,7 @@ python:
 
 before_install:
   - sudo apt-get -qq update -y
-  - sudo apt-get install -y mpc mpd
+  - sudo apt-get install -y mpc mpd espeak
 
 install: "pip install -r requirements_ci.txt"
 # command to run tests
